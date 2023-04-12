@@ -1,0 +1,20 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "fixed-center": true,
+    "gtk-layer-shell": true,
+    "id": "mainbar",
+    "modules-left": [ "wlr/workspaces" ],
+    "modules-center": [  ],
+    "modules-right": [  ],
+
+    "wlr/workspaces": 
+    {
+        "format": "{name}",
+	"on-click": "activate"
+    }
+}
+
+// vim:ft=json
+
