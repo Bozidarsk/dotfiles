@@ -38,7 +38,7 @@ pacman -Syu waybar zsh python3 gdm gnome-shell gnome-shell-extensions gnome-term
 
 mkdir /home/bozidar
 chmod +w /etc/sudoers
-vim /etc/sudoers # uncomment line '%sudo ALL=(ALL:ALL) ALL'
+vim /etc/sudoers # uncomment line 91 '%sudo ALL=(ALL:ALL) ALL'
 chmod -w /etc/sudoers
 groupadd sudo
 useradd --home-dir /home/bozidar -G sudo bozidar
