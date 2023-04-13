@@ -1,0 +1,84 @@
+timedatectl set-timezone Etc/GMT-3
+
+fdisk /dev/sda
+# /dev/sda1: ~500MB (2048:1050624), EFI Partition
+# /dev/sda2: the remaining space, Linux Filesystem
+
+mkfs.fat -F 32 /dev/sda1
+mkfs.ext4 /dev/sda2
+mkdir /mnt/boot
+mkdir /mnt/boot/efi
+mount /dev/sda2 /mnt
+mount /dev/sda1 /mnt/boot/efi
+
+pacstrap -K /mnt base linux linux-firmware
+genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
+
+pacman -S git vim dhcpcd openssh sudo grub efibootmgr
+systemctl enable dhcpcd
+systemctl enable sshd
+
+echo "archbtw" > /etc/hostname
+vim /etc/locale.gen # uncomment line 171 'en_US.UTF-8 UTF-8'
+
+grub-install --target=x86_64-efi
+grub-mkconfig -o /boot/grub/grub.cfg
+
+passwd # change root password
+exit
+reboot
+
+localectl set-locale LANG="en_US.UTF-8"
+localectl set-keymap us
+localectl set-x11-keymap us
+locale-gen
+
+pacman -Syu waybar zsh python3 gdm gnome-shell gnome-shell-extensions gnome-terminal dconf-editor nautilus gnome-control-center gnome-tweaks networkmanager base-devel libxss ttf-liberation xdg-utils libcurl-gnutls
+
+mkdir /home/bozidar
+chmod +w /etc/sudoers
+vim /etc/sudoers # uncomment line '%sudo ALL=(ALL:ALL) ALL'
+chmod -w /etc/sudoers
+groupadd sudo
+useradd --home-dir /home/bozidar -G sudo bozidar
+passwd bozidar
+chown bozidar: /home/bozidar
+cd /home/bozidar
+
+git clone https://github.com/Bozidarsk/dotfiles
+mkdir .config
+ln -s dotfiles/.zshrc .zshrc 
+ln -sr dotfiles/.themes .themes
+ln -sr dotfiles/.icons .icons
+ln -sr dotfiles/.config/gtk-4.0 .config/gtk-4.0
+ln -sr dotfiles/.config/waybar .config/waybar
+ln -sr /home/bozidar/dotfiles/fonts /usr/local/share/fonts
+fc-cache -fv
+chsh -s /bin/zsh bozidar
+chsh -s /bin/zsh root
+
+systemctl enable gdm
+systemctl enable NetworkManager
+su bozidar
+
+git clone https://aur.archlinux.org/gnome-browser-connector.git
+cd gnome-browser-connector
+makepkg -i
+cd ..
+rm -rf gnome-browser-connector
+
+git clone https://aur.archlinux.org/google-chrome.git
+cd google-chrome
+makepkg -i
+cd ..
+rm -rf google-chrome
+
+git clone https://aur.archlinux.org/spotify.git
+cd spotify
+gpg --recv-keys 7A3A762FAFD4A51F
+makepkg -i
+cd ..
+rm -rf spotify
+
+sudo reboot
