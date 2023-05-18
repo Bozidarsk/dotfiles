@@ -5,19 +5,20 @@ fdisk /dev/sda
 # /dev/sda2: the remaining space, Linux Filesystem
 
 mkfs.fat -F 32 /dev/sda1
-mkfs.ext4 /dev/sda2
+mkfs.ext4 /dev/sda2
+mount /dev/sda2 /mnt
 mkdir /mnt/boot
 mkdir /mnt/boot/efi
-mount /dev/sda2 /mnt
 mount /dev/sda1 /mnt/boot/efi
 
 pacstrap -K /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
 
-pacman -S git vim dhcpcd openssh sudo grub efibootmgr
+pacman -S iwd git vim dhcpcd openssh sudo grub efibootmgr
 systemctl enable dhcpcd
 systemctl enable sshd
+systemctl enable iwd
 
 echo "archbtw" > /etc/hostname
 vim /etc/locale.gen # uncomment line 171 'en_US.UTF-8 UTF-8'
@@ -28,6 +29,11 @@ grub-mkconfig -o /boot/grub/grub.cfg
 passwd # change root password
 exit
 reboot
+
+iwctl
+# station wlan0 connect $SSID
+# $PASSWORD
+# quit
 
 localectl set-locale LANG="en_US.UTF-8"
 localectl set-keymap us
