@@ -1,0 +1,121 @@
+fdisk /dev/sda
+# /dev/sda1: ~500MB (2048:1050624), EFI Partition
+# /dev/sda2: the remaining space, Linux Filesystem
+
+mkfs.fat -F 32 /dev/sda1
+mkfs.ext4 /dev/sda2
+mount /dev/sda2 /mnt
+mkdir /mnt/boot
+mkdir /mnt/boot/efi
+mount /dev/sda1 /mnt/boot/efi
+
+pacstrap -K /mnt base linux linux-firmware
+genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
+
+pacman -S iwd git vim dhcpcd openssh sudo grub efibootmgr
+systemctl enable dhcpcd
+systemctl enable sshd
+systemctl enable iwd
+
+echo "archbtw" > /etc/hostname
+vim /etc/locale.gen # uncomment line 171 'en_US.UTF-8 UTF-8'
+
+grub-install --target=x86_64-efi
+grub-mkconfig -o /boot/grub/grub.cfg
+
+passwd # change root password
+exit
+reboot
+
+iwctl
+# station wlan0 connect $SSID
+# $PASSWORD
+# quit
+
+localectl set-locale LANG="en_US.UTF-8"
+locale-gen
+
+pacman -Syu hyprland waybar python3 zsh alacritty ufw base-devel wofi brightnessctl pulseaudio unzip wl-clipboard grim slurp mpv x265 x264 gtk4 libadwaita cups
+
+mkdir /home/bozidar
+chmod +w /etc/sudoers
+vim /etc/sudoers # uncomment line 91 '%sudo ALL=(ALL:ALL) ALL'
+chmod -w /etc/sudoers
+groupadd sudo
+useradd --home-dir /home/bozidar -G sudo bozidar
+passwd bozidar
+chown bozidar: /home/bozidar
+cd /home/bozidar
+
+git clone https://github.com/Bozidarsk/dotfiles
+mkdir .config
+ln -s dotfiles/.zshrc .zshrc 
+ln -sr dotfiles/.themes .themes
+ln -sr dotfiles/.icons .icons
+ln -sr dotfiles/.config/gtk-4.0 .config/gtk-4.0
+ln -sr dotfiles/.config/hypr .config/hypr
+ln -sr dotfiles/.config/waybar .config/waybar
+ln -sr dotfiles/.config/alacritty .config/alacritty
+ln -sr dotfiles/.config/wofi .config/wofi
+ln -sr /home/bozidar/dotfiles/fonts /usr/local/share/fonts
+fc-cache -fv
+chsh -s /bin/zsh bozidar
+chsh -s /bin/zsh root
+su bozidar
+
+git clone https://aur.archlinux.org/google-chrome.git
+cd google-chrome
+makepkg -si
+cd ..
+rm -rf google-chrome
+
+git clone https://aur.archlinux.org/spotify.git
+cd spotify
+gpg --recv-keys 7A3A762FAFD4A51F
+makepkg -si
+cd ..
+rm -rf spotify
+
+git clone https://aur.archlinux.org/swaync.git 
+cd swaync
+makepkg -si
+cd ..
+rm -rf swaync
+
+git clone https://aur.archlinux.org/hyprpicker-git.git
+cd hyprpicker-git
+makepkg -si
+cd ..
+rm -rf hyprpicker-git
+
+git clone https://github.com/celluloid-player/celluloid.git
+cd celluloid
+meson setup build && cd build && ninja && sudo ninja install
+cd ..
+rm -rf celluloid
+
+sudo timedatectl set-timezone Europe/Sofia
+sudo timedatectl set-ntp true
+
+mkdir $HOME/Pictures
+mkdir $HOME/Pictures/Screenshots
+
+sudo vim /etc/cups/cupsd.conf
+# change line 18 from localhost:631 to 0.0.0.0:631
+# Add 'Allow @LOCAL' to '<Location />' and '<Location /admin>'
+sudo systemctl enable cups
+sudo systemctl start cups
+sudo lpadmin -p Canon_TS6250 -E -v "ipp://192.168.1.10/ipp/print" -m everywhere
+lpoptions -d Canon_TS6250
+
+gsettings set org.gnome.desktop.wm.preferences theme 'Colloid-Dark-Nord'
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface gtk-theme 'Colloid-Dark-Nord'
+gsettings set org.gnome.desktop.interface icon-theme 'Colloid-teal-nord'
+gsettings set org.gnome.desktop.interface cursor-theme 'Win-8.1-NS'
+export GTK_THEME=Colloid-Dark-Nord
+sudo echo "GTK_THEME=Colloid-Dark-Nord" >> /etc/environment
+
+sudo reboot
+Hyprland

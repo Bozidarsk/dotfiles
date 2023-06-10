@@ -1,0 +1,92 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "margin": 0,
+    "modules-left": [ "wlr/workspaces", "custom/notification" ],
+    "modules-center": [ "clock" ],
+    "modules-right": [ "custom/language", "pulseaudio",  "network", "custom/battery" ],
+
+    "wlr/workspaces": 
+    {
+        "format": "{name}",
+        "on-click": "activate",
+        "sort-by-number": true
+    },
+
+    "clock": 
+    {
+        "format": "{:%H:%M | %d/%m/%Y}"
+    },
+
+    "pulseaudio": 
+    {
+        "tooltip": true,
+        "tooltip-format": "{volume}%",
+        "format-muted": "",
+        "format-bluetooth": "{icon}",
+        "format": "{icon}",
+        "format-icons": [ "", "", "", "" ],
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%"
+    },
+    "network": 
+    {
+        "interface": "wlan0",
+        "family": "ipv4",
+        "tooltip": true,
+        "tooltip-format": "Not connectd.",
+        "tooltip-format-wifi": "{ipaddr}/{cidr}",
+        "tooltip-format-ethernet": "{ipaddr}/{cidr}",
+        "tooltip-format-disconnected": "Not connected.",
+        "format": "󰇨",
+        "format-wifi": "{icon}",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰇨",
+        "format-icons": [ "󰤯", "󰤟", "󰤢", "󰤥", "󰤨" ],
+        "on-click-right": "ip addr show wlan0 | grep -Eo \"[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+\\/\" 2> /dev/null | tr -d '/\\n' | wl-copy"
+    },
+    "custom/notification": 
+    {
+        "format": "{icon}",
+        "tooltip": false,
+        "return-type": "json",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "format-icons": 
+        {
+            "notification": "<span foreground='red'><sup></sup></span>",
+            "none": "",
+            "dnd-notification": "<span foreground='red'><sup></sup></span>",
+            "dnd-none": "",
+            "inhibited-notification": "<span foreground='red'><sup></sup></span>",
+            "inhibited-none": "",
+            "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+            "dnd-inhibited-none": ""
+        }
+    },
+    "custom/battery": 
+    {
+        "interval": 1,
+        "tooltip": false,
+        "return-type": "json",
+        "format": "{percentage}% {icon} ",
+        "exec": "~/.config/waybar/scripts/battery.sh BAT1",
+        "format-icons": 
+        {
+            "charging": [ "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅" ],
+            "discharging": [ "󱃍", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹" ]
+        }
+    },
+    "custom/language": 
+    {
+        "format": "{}",
+        "interval": 1,
+        "tooltip": false,
+        "exec": "~/.config/waybar/scripts/language.sh",
+        "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next",
+        "on-click-right": "hyprctl switchxkblayout at-translated-set-2-keyboard prev"
+    }
+}
