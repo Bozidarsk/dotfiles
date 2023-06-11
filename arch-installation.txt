@@ -38,6 +38,10 @@ locale-gen
 
 pacman -Syu hyprland waybar python3 zsh alacritty ufw base-devel wofi brightnessctl pulseaudio unzip wl-clipboard grim slurp mpv x265 x264 gtk4 libadwaita cups
 
+ufw enable
+ufw allow 20/tcp
+ufw allow 80/tcp
+
 mkdir /home/bozidar
 chmod +w /etc/sudoers
 vim /etc/sudoers # uncomment line 91 '%sudo ALL=(ALL:ALL) ALL'
@@ -47,6 +51,7 @@ useradd --home-dir /home/bozidar -G sudo bozidar
 passwd bozidar
 chown bozidar: /home/bozidar
 cd /home/bozidar
+su bozidar
 
 git clone https://github.com/Bozidarsk/dotfiles
 mkdir .config
@@ -58,11 +63,10 @@ ln -sr dotfiles/.config/hypr .config/hypr
 ln -sr dotfiles/.config/waybar .config/waybar
 ln -sr dotfiles/.config/alacritty .config/alacritty
 ln -sr dotfiles/.config/wofi .config/wofi
-ln -sr /home/bozidar/dotfiles/fonts /usr/local/share/fonts
-fc-cache -fv
-chsh -s /bin/zsh bozidar
-chsh -s /bin/zsh root
-su bozidar
+sudo ln -sr /home/bozidar/dotfiles/fonts /usr/local/share/fonts
+sudo fc-cache -fv
+sudo chsh -s /bin/zsh bozidar
+sudo chsh -s /bin/zsh root
 
 git clone https://aur.archlinux.org/google-chrome.git
 cd google-chrome
