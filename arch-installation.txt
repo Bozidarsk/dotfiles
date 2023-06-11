@@ -53,7 +53,7 @@ chown bozidar: /home/bozidar
 cd /home/bozidar
 su bozidar
 
-git clone https://github.com/Bozidarsk/dotfiles
+git clone https://github.com/Bozidarsk/dotfiles --brach hyprland
 mkdir .config
 ln -s dotfiles/.zshrc .zshrc 
 ln -sr dotfiles/.themes .themes
@@ -63,7 +63,7 @@ ln -sr dotfiles/.config/hypr .config/hypr
 ln -sr dotfiles/.config/waybar .config/waybar
 ln -sr dotfiles/.config/alacritty .config/alacritty
 ln -sr dotfiles/.config/wofi .config/wofi
-sudo ln -sr /home/bozidar/dotfiles/fonts /usr/local/share/fonts
+sudo ln -sr dotfiles/fonts /usr/local/share/fonts
 sudo fc-cache -fv
 sudo chsh -s /bin/zsh bozidar
 sudo chsh -s /bin/zsh root
