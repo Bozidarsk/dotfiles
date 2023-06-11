@@ -58,7 +58,8 @@ mkdir .config
 ln -s dotfiles/.zshrc .zshrc 
 ln -sr dotfiles/.themes .themes
 ln -sr dotfiles/.icons .icons
-ln -sr dotfiles/.config/gtk-4.0 .config/gtk-4.0
+ln -sr dotfiles/.themes/Colloid-Dark-Nord/gtk-3.0 .config/gtk-3.0
+ln -sr dotfiles/.themes/Colloid-Dark-Nord/gtk-4.0 .config/gtk-4.0
 ln -sr dotfiles/.config/hypr .config/hypr
 ln -sr dotfiles/.config/waybar .config/waybar
 ln -sr dotfiles/.config/alacritty .config/alacritty
@@ -118,8 +119,6 @@ gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.interface gtk-theme 'Colloid-Dark-Nord'
 gsettings set org.gnome.desktop.interface icon-theme 'Colloid-teal-nord'
 gsettings set org.gnome.desktop.interface cursor-theme 'Win-8.1-NS'
-export GTK_THEME=Colloid-Dark-Nord
-sudo echo "GTK_THEME=Colloid-Dark-Nord" >> /etc/environment
 
 sudo reboot
 Hyprland
