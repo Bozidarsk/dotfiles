@@ -1,5 +1,5 @@
 fdisk /dev/sda
-# /dev/sda1: ~500MB (2048:1050624), EFI Partition
+# /dev/sda1: ~100MB (2048:211764), EFI Partition
 # /dev/sda2: the remaining space, Linux Filesystem
 
 mkfs.fat -F 32 /dev/sda1
