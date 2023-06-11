@@ -39,7 +39,7 @@ locale-gen
 pacman -Syu hyprland waybar python3 zsh alacritty ufw base-devel wofi brightnessctl pulseaudio unzip wl-clipboard grim slurp mpv x265 x264 gtk4 libadwaita cups
 
 ufw enable
-ufw allow 20/tcp
+ufw allow 22/tcp
 ufw allow 80/tcp
 
 mkdir /home/bozidar
