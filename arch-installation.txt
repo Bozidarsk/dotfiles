@@ -58,8 +58,8 @@ mkdir .config
 ln -s dotfiles/.zshrc .zshrc 
 ln -sr dotfiles/.themes .themes
 ln -sr dotfiles/.icons .icons
-ln -sr dotfiles/.themes/Colloid-Dark-Nord/gtk-3.0 .config/gtk-3.0
-ln -sr dotfiles/.themes/Colloid-Dark-Nord/gtk-4.0 .config/gtk-4.0
+ln -sr dotfiles/.themes/$GTK_THEME/gtk-3.0 .config/gtk-3.0
+ln -sr dotfiles/.themes/$GTK_THEME/gtk-4.0 .config/gtk-4.0
 ln -sr dotfiles/.config/hypr .config/hypr
 ln -sr dotfiles/.config/waybar .config/waybar
 ln -sr dotfiles/.config/alacritty .config/alacritty
@@ -114,11 +114,11 @@ sudo systemctl start cups
 sudo lpadmin -p Canon_TS6250 -E -v "ipp://192.168.1.10/ipp/print" -m everywhere
 lpoptions -d Canon_TS6250
 
-gsettings set org.gnome.desktop.wm.preferences theme 'Colloid-Dark-Nord'
+gsettings set org.gnome.desktop.wm.preferences theme '$GTK_THEME'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-gsettings set org.gnome.desktop.interface gtk-theme 'Colloid-Dark-Nord'
-gsettings set org.gnome.desktop.interface icon-theme 'Colloid-teal-nord'
-gsettings set org.gnome.desktop.interface cursor-theme 'Win-8.1-NS'
+gsettings set org.gnome.desktop.interface gtk-theme '$GTK_THEME'
+gsettings set org.gnome.desktop.interface icon-theme '$ICON_THEME'
+gsettings set org.gnome.desktop.interface cursor-theme '$CURSOR_THEME'
 
 sudo reboot
 Hyprland
